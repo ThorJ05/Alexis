@@ -5,5 +5,138 @@
     "content": "My first post",
     "author": "Lukas",
     "created_at": "2026-08-17T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "title": "Fars Fede Ferie",
+    "content": "Første dag var vi i poolen",
+    "author": "Lars",
+    "created_at": "2027-08-17T10:00:00Z"
+  },
+  {
+    "id": 3,
+    "title": "Mit Nye Job",
+    "content": "Jeg startede i mandags, det går godt!",
+    "author": "Frederik",
+    "created_at": "2026-09-01T08:30:00Z"
+  },
+  {
+    "id": 4,
+    "title": "Gaming Night",
+    "content": "Vi spillede Valorant hele natten.",
+    "author": "Mikkel",
+    "created_at": "2026-09-02T22:15:00Z"
+  },
+  {
+    "id": 5,
+    "title": "Kage Opskrift",
+    "content": "Min chokoladekage blev perfekt!",
+    "author": "Anna",
+    "created_at": "2026-09-03T14:00:00Z"
+  },
+  {
+    "id": 6,
+    "title": "Ny Bil",
+    "content": "Jeg købte en Tesla Model 3.",
+    "author": "Jonas",
+    "created_at": "2026-09-04T11:45:00Z"
+  },
+  {
+    "id": 7,
+    "title": "Weekend Hygge",
+    "content": "Film, popcorn og afslapning.",
+    "author": "Sara",
+    "created_at": "2026-09-05T20:00:00Z"
+  },
+  {
+    "id": 8,
+    "title": "Træning",
+    "content": "Ben-dag i fitness, av!",
+    "author": "Frederik",
+    "created_at": "2026-09-06T17:30:00Z"
+  },
+  {
+    "id": 9,
+    "title": "Ny Computer",
+    "content": "Ryzen 9, RTX 4080 – den flyver!",
+    "author": "Lukas",
+    "created_at": "2026-09-07T13:20:00Z"
+  },
+  {
+    "id": 10,
+    "title": "Skole Start",
+    "content": "Første dag på datamatiker uddannelsen.",
+    "author": "Frederik",
+    "created_at": "2026-09-08T09:00:00Z"
+  },
+  {
+    "id": 11,
+    "title": "Film Aften",
+    "content": "Så Inception igen, stadig god.",
+    "author": "Lars",
+    "created_at": "2026-09-09T21:00:00Z"
+  },
+  {
+    "id": 12,
+    "title": "Ny Opskrift",
+    "content": "Prøvede at lave ramen – blev overraskende godt.",
+    "author": "Anna",
+    "created_at": "2026-09-10T18:00:00Z"
+  },
+  {
+    "id": 13,
+    "title": "Hjemmekontor",
+    "content": "Arbejder hjemme i dag, elsker det.",
+    "author": "Mikkel",
+    "created_at": "2026-09-11T08:00:00Z"
+  },
+  {
+    "id": 14,
+    "title": "Ny Serie",
+    "content": "Startede på The Boys – sindssyg serie!",
+    "author": "Jonas",
+    "created_at": "2026-09-12T19:00:00Z"
+  },
+  {
+    "id": 15,
+    "title": "Morgenmad",
+    "content": "Avocado toast og kaffe.",
+    "author": "Sara",
+    "created_at": "2026-09-13T07:30:00Z"
+  },
+  {
+    "id": 16,
+    "title": "Programmering",
+    "content": "Lavet en React app i dag.",
+    "author": "Frederik",
+    "created_at": "2026-09-14T15:00:00Z"
+  },
+  {
+    "id": 17,
+    "title": "Ny Musik",
+    "content": "Hørt det nye album fra Weeknd.",
+    "author": "Lukas",
+    "created_at": "2026-09-15T12:00:00Z"
+  },
+  {
+    "id": 18,
+    "title": "Shopping",
+    "content": "Købte nye sko.",
+    "author": "Anna",
+    "created_at": "2026-09-16T16:00:00Z"
+  },
+  {
+    "id": 19,
+    "title": "Roadtrip",
+    "content": "Kørte til Tyskland med venner.",
+    "author": "Mikkel",
+    "created_at": "2026-09-17T10:00:00Z"
+  },
+  {
+    "id": 20,
+    "title": "Chill Dag",
+    "content": "Bare slappet af og set YouTube.",
+    "author": "Frederik",
+    "created_at": "2026-09-18T14:00:00Z"
   }
 ]
