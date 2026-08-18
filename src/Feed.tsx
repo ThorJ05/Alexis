@@ -1,7 +1,7 @@
+import { Link } from "react-router-dom";
 import { Post } from "./Types";
 
 const accentColors = ["goldenrod", "seagreen", "chocolate", "mediumpurple"];
-
 function accentFor(userId: number) {
     return accentColors[userId % accentColors.length];
 }
@@ -16,12 +16,12 @@ export function Feed({ posts, query, onSearch }: { posts: Post[]; query: string;
                 value={query}
                 onChange={e => onSearch(e.target.value)}
             />
-
             <div className="flex flex-col gap-3">
                 {posts.map(post => (
-                    <div
+                    <Link
                         key={post.id}
-                        className="card bg-base-200 shadow-sm rounded-r-lg rounded-l-none"
+                        to={`/post/${post.id}`}
+                        className="card bg-base-200 shadow-sm rounded-r-lg rounded-l-none hover:shadow-md transition-shadow"
                         style={{ borderLeft: `5px solid ${accentFor(post.userId)}` }}
                     >
                         <div className="card-body py-4">
@@ -32,10 +32,9 @@ export function Feed({ posts, query, onSearch }: { posts: Post[]; query: string;
                                 <span>👍 {post.reactions.likes} · 👁 {post.views} views</span>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>
     );
-
 }

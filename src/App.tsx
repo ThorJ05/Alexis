@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Feed } from "./Feed";
 import { CreatePost } from "./CreatePost";
+import { PostPage } from "./PostPage";
 import { Post } from "./Types";
 
 export function App() {
@@ -18,7 +20,6 @@ export function App() {
         const url = query.trim()
             ? `https://dummyjson.com/posts/search?q=${encodeURIComponent(query)}`
             : "https://dummyjson.com/posts?limit=50";
-
         fetch(url)
             .then(res => res.json())
             .then(json => setPosts(json.posts));
@@ -29,22 +30,31 @@ export function App() {
     }
 
     return (
-        <div className="min-h-screen bg-base-100">
-            <div className="navbar bg-base-100 px-4">
-                <span className="text-2xl font-semibold">Y</span>
-                <div className="flex-1" />
-                <label className="swap swap-rotate ml-2">
-                    <input type="checkbox" checked={dark} onChange={e => setDark(e.target.checked)} />
-                    <span className="swap-off">Light</span>
-                    <span className="swap-on">Dark</span>
-                </label>
+        <BrowserRouter>
+            <div className="min-h-screen bg-base-100">
+                <div className="navbar bg-base-100 px-4">
+                    <span className="text-2xl font-semibold">Y</span>
+                    <div className="flex-1" />
+                    <label className="swap swap-rotate ml-2">
+                        <input type="checkbox" checked={dark} onChange={e => setDark(e.target.checked)} />
+                        <span className="swap-off">Light</span>
+                        <span className="swap-on">Dark</span>
+                    </label>
+                </div>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <div className="max-w-2xl mx-auto p-4">
+                                <CreatePost onCreate={addPost} />
+                                <Feed posts={posts} query={query} onSearch={setQuery} />
+                            </div>
+                        }
+                    />
+                    <Route path="/post/:id" element={<PostPage />} />
+                </Routes>
             </div>
-
-            <div className="max-w-2xl mx-auto p-4">
-                <CreatePost onCreate={addPost} />
-                <Feed posts={posts} query={query} onSearch={setQuery} />
-            </div>
-        </div>
+        </BrowserRouter>
     );
 }
 
