@@ -1,7 +1,21 @@
+export interface Root {
+    posts: Post[];
+    total: number;
+    skip: number;
+    limit: number;
+}
+
 export interface Post {
     id: number;
     title: string;
-    content: string;
-    author: string;
-    created_at: string;
+    body: string;
+    tags: string[];
+    reactions: Reactions;
+    views: number;
+    userId: number;
+}
+
+export interface Reactions {
+    likes: number;
+    dislikes: number;
 }

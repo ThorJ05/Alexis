@@ -1,38 +1,41 @@
-import { useState } from "react";
-import postsData from "./posts.json";
 import { Post } from "./Types";
 
-export function Feed() {
-    const [posts] = useState<Post[]>(postsData);
+const accentColors = ["goldenrod", "seagreen", "chocolate", "mediumpurple"];
 
-    // Søgefelt (brugeren skriver tekst)
-    const [search, setSearch] = useState("");
+function accentFor(userId: number) {
+    return accentColors[userId % accentColors.length];
+}
 
-    // Filtrer posts efter title
-    const filtered = posts.filter(post =>
-        post.title.toLowerCase().includes(search.toLowerCase())
-    );
-
+export function Feed({ posts, query, onSearch }: { posts: Post[]; query: string; onSearch: (q: string) => void }) {
     return (
         <div>
-            <h1>Feed</h1>
-
-            {/* Søgefelt */}
             <input
                 type="text"
                 placeholder="Søg efter titel..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
+                className="input input-bordered w-full mb-4"
+                value={query}
+                onChange={e => onSearch(e.target.value)}
             />
 
-            {/* Facebook-style feed: viser ALLE posts som default */}
-            {filtered.map(post => (
-                <div key={post.id} style={{ marginBottom: "20px" }}>
-                    <h2>{post.title}</h2>
-                    <p>{post.content}</p>
-                    <small>{post.created_at}</small>
-                </div>
-            ))}
+            <div className="flex flex-col gap-3">
+                {posts.map(post => (
+                    <div
+                        key={post.id}
+                        className="card bg-base-200 shadow-sm rounded-r-lg rounded-l-none"
+                        style={{ borderLeft: `5px solid ${accentFor(post.userId)}` }}
+                    >
+                        <div className="card-body py-4">
+                            <h2 className="card-title">{post.title}</h2>
+                            <p>{post.body}</p>
+                            <div className="flex justify-between items-center text-xs opacity-60">
+                                <span>User {post.userId}</span>
+                                <span>👍 {post.reactions.likes} · 👁 {post.views} views</span>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
+
 }

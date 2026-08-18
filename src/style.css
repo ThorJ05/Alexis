@@ -1,0 +1,71 @@
+@import "tailwindcss";
+@source "../src/**/*.{ts,tsx}"; /* tells Tailwind where to scan for classes */
+
+@plugin "daisyui" {
+    themes: false; /* using custom themes below instead of built-in ones */
+}
+
+/* light theme */
+@plugin "daisyui/theme" {
+    name: "y-light";
+    default: true;
+    prefersdark: false;
+    color-scheme: light;
+
+    --color-base-100: whitesmoke;
+    --color-base-200: white;
+    --color-base-300: lightgray;
+    --color-base-content: darkslategray;
+
+    --color-primary: goldenrod;
+    --color-primary-content: #3D2F00;
+
+    --color-secondary: seagreen;
+    --color-secondary-content: white;
+
+    --color-accent: chocolate;
+    --color-accent-content: white;
+
+    --color-neutral: dimgray;
+    --color-neutral-content: white;
+
+    --color-error: firebrick;
+    --color-error-content: white;
+
+    --radius-box: 0.625rem;
+    --radius-field: 0.5rem;
+}
+
+/* dark theme */
+@plugin "daisyui/theme" {
+    name: "y-dark";
+    prefersdark: true;
+    color-scheme: dark;
+
+    --color-base-100: #18191a;
+    --color-base-200: #242526;
+    --color-base-300: #3a3b3c;
+    --color-base-content: whitesmoke;
+
+    --color-primary: gold;
+    --color-primary-content: #3D2F00;
+
+    --color-secondary: mediumseagreen;
+    --color-secondary-content: #0f1f16;
+
+    --color-accent: coral;
+    --color-accent-content: #3a1608;
+
+    --color-neutral: lightgray;
+    --color-neutral-content: darkslategray;
+
+    --color-error: indianred;
+    --color-error-content: white;
+
+    --radius-box: 0.625rem;
+    --radius-field: 0.5rem;
+}
+
+.card-title, h1, h2 {
+    font-weight: 600;
+}
