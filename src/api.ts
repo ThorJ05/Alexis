@@ -33,7 +33,7 @@ export async function deletePost(id: number): Promise<void> {
 }
 
 export async function addComment(postId: number, body: string): Promise<Comment> {
-    const res = await fetch('${BASE}/comments/add', {
+    const res = await fetch(`${BASE}/comments/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ body, postId, userId: 1 }),

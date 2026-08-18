@@ -9,8 +9,7 @@ export function CreatePost({ onCreate }: { onCreate: (post: Post) => void }) {
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        await createPost(title, body); // hits the real API, dummyjson just won't save it server-side
-
+        await createPost(title, body);
         onCreate({
             id: Date.now(),
             title,
@@ -20,7 +19,6 @@ export function CreatePost({ onCreate }: { onCreate: (post: Post) => void }) {
             views: 0,
             userId: 0,
         });
-
         setTitle("");
         setBody("");
     }

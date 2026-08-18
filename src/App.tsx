@@ -4,6 +4,7 @@ import { Feed } from "./Feed";
 import { CreatePost } from "./CreatePost";
 import { PostPage } from "./PostPage";
 import { Post } from "./Types";
+import { getCustomPosts, saveCustomPost } from "./storage";
 
 export function App() {
     const [dark, setDark] = useState(() => localStorage.getItem("theme") === "y-dark");
@@ -22,11 +23,26 @@ export function App() {
             : "https://dummyjson.com/posts?limit=50";
         fetch(url)
             .then(res => res.json())
-            .then(json => setPosts(json.posts));
+            .then(json => {
+                // Always show your own locally-created posts too, unless actively searching
+                const custom = query.trim() ? [] : getCustomPosts();
+                setPosts([...custom, ...json.posts]);
+            });
     }, [query]);
 
     function addPost(newPost: Post) {
+        saveCustomPost(newPost);
         setPosts(prev => [newPost, ...prev]);
+    }
+
+    function adjustLikes(id: number, delta: number) {
+        setPosts(prev =>
+            prev.map(post =>
+                post.id === id
+                    ? { ...post, reactions: { ...post.reactions, likes: post.reactions.likes + delta } }
+                    : post
+            )
+        );
     }
 
     return (
@@ -47,7 +63,7 @@ export function App() {
                         element={
                             <div className="max-w-2xl mx-auto p-4">
                                 <CreatePost onCreate={addPost} />
-                                <Feed posts={posts} query={query} onSearch={setQuery} />
+                                <Feed posts={posts} query={query} onSearch={setQuery} onLikeChange={adjustLikes} />
                             </div>
                         }
                     />
