@@ -4,6 +4,8 @@ import { Post, Comment } from "./Types";
 const LIKED_KEY = "likedPostIds";
 const CUSTOM_POSTS_KEY = "customPosts";
 const CUSTOM_COMMENTS_KEY = "customComments";
+//Sets the max number of post a user may create uwu
+const MAX_CUSTOM_POSTS = 12;
 
 // ---- Likes (which posts the user has liked, so we can toggle) ----
 function loadLikedIds(): Set<number> {
@@ -59,6 +61,11 @@ export function getCustomPost(id: number): Post | undefined {
 
 export function isCustomPostId(id: number): boolean {
     return getCustomPosts().some(p => p.id === id);
+}
+
+// This function looks for if the user has reached their limit for posts and returns true or false
+export function hasReachedPostLimit(): boolean {
+    return getCustomPosts().length >= MAX_CUSTOM_POSTS;
 }
 
 export function deleteCustomPost(id: number) {
