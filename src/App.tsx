@@ -82,7 +82,7 @@ export function App() {
                             </div>
                         }
                     />
-                    <Route path="/post/:id" element={<PostPage />} />
+                    <Route path="/post/:id" element={<PostPage onDelete={removePost} />} />
                 </Routes>
             </div>
         </BrowserRouter>

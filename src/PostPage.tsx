@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { fetchPost, fetchComments, addComment, deletePost } from "./api";
+import { fetchPost, fetchComments, addComment } from "./api";
 import { Post, Comment } from "./Types";
 import {
     useLikedPosts,
@@ -9,10 +9,9 @@ import {
     getCustomPost,
     getCustomComments,
     addCustomComment,
-    deleteCustomPost,
 } from "./storage";
 
-export function PostPage() {
+export function PostPage({ onDelete }: { onDelete: (id: number) => void }) {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [post, setPost] = useState<Post | null>(null);
@@ -62,13 +61,9 @@ export function PostPage() {
         setPost({ ...post, reactions: { ...post.reactions, likes: post.reactions.likes + delta } });
     }
 
-    async function handleDelete() {
+    function handleDelete() {
         if (numericId === null) return;
-        if (isCustom) {
-            deleteCustomPost(numericId);
-        } else {
-            await deletePost(numericId);
-        }
+        onDelete(numericId);
         navigate("/");
     }
 
