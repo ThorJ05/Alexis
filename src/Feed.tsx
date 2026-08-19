@@ -12,11 +12,13 @@ export function Feed({
                          query,
                          onSearch,
                          onLikeChange,
+                         onDelete,
                      }: {
     posts: Post[];
     query: string;
     onSearch: (q: string) => void;
     onLikeChange: (id: number, delta: number) => void;
+    onDelete: (id: number) => void;
 }) {
     const { likedIds, toggleLike } = useLikedPosts();
 
@@ -57,6 +59,17 @@ export function Feed({
                                             {liked ? "👍" : "🤍"} {post.reactions.likes}
                                         </button>
                                         <span>👁 {post.views} views</span>
+                                        <button
+                                            onClick={e => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                onDelete(post.id);
+                                            }}
+                                            className="text-error hover:scale-110 transition-transform cursor-pointer"
+                                            title="Slet post"
+                                        >
+                                            🗑
+                                        </button>
                                     </span>
                                 </div>
                             </div>

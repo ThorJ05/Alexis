@@ -4,7 +4,8 @@ import { Feed } from "./Feed";
 import { CreatePost } from "./CreatePost";
 import { PostPage } from "./PostPage";
 import { Post } from "./Types";
-import { getCustomPosts, saveCustomPost } from "./storage";
+import { getCustomPosts, saveCustomPost, deleteCustomPost, isCustomPostId } from "./storage";
+import { deletePost } from "./api";
 
 export function App() {
     const [dark, setDark] = useState(() => localStorage.getItem("theme") === "y-dark");
@@ -24,7 +25,6 @@ export function App() {
         fetch(url)
             .then(res => res.json())
             .then(json => {
-                // Always show your own locally-created posts too, unless actively searching
                 const custom = query.trim() ? [] : getCustomPosts();
                 setPosts([...custom, ...json.posts]);
             });
@@ -45,6 +45,15 @@ export function App() {
         );
     }
 
+    async function removePost(id: number) {
+        if (isCustomPostId(id)) {
+            deleteCustomPost(id);
+        } else {
+            await deletePost(id);
+        }
+        setPosts(prev => prev.filter(post => post.id !== id));
+    }
+
     return (
         <BrowserRouter>
             <div className="min-h-screen bg-base-100">
@@ -63,7 +72,13 @@ export function App() {
                         element={
                             <div className="max-w-2xl mx-auto p-4">
                                 <CreatePost onCreate={addPost} />
-                                <Feed posts={posts} query={query} onSearch={setQuery} onLikeChange={adjustLikes} />
+                                <Feed
+                                    posts={posts}
+                                    query={query}
+                                    onSearch={setQuery}
+                                    onLikeChange={adjustLikes}
+                                    onDelete={removePost}
+                                />
                             </div>
                         }
                     />

@@ -4,10 +4,20 @@ import { Post, Comment } from "./Types";
 const LIKED_KEY = "likedPostIds";
 const CUSTOM_POSTS_KEY = "customPosts";
 const CUSTOM_COMMENTS_KEY = "customComments";
-//Sets the max number of post a user may create uwu
 const MAX_CUSTOM_POSTS = 12;
 
-// ---- Likes (which posts the user has liked, so we can toggle) ----
+const MAX_TITLE_LENGTH = 100;
+const MAX_BODY_LENGTH = 500;
+
+export function postLimits() {
+    return { MAX_TITLE_LENGTH, MAX_BODY_LENGTH };
+}
+
+export function isPostTooLong(title: string, body: string): boolean {
+    return title.length > MAX_TITLE_LENGTH || body.length > MAX_BODY_LENGTH;
+}
+
+// ---- Likes ----
 function loadLikedIds(): Set<number> {
     try {
         const raw = localStorage.getItem(LIKED_KEY);
@@ -40,7 +50,7 @@ export function useLikedPosts() {
     return { likedIds, toggleLike };
 }
 
-// ---- Posts the user created locally (dummyjson won't actually store these) ----
+// ---- Custom posts ----
 export function getCustomPosts(): Post[] {
     try {
         const raw = localStorage.getItem(CUSTOM_POSTS_KEY);
@@ -63,7 +73,6 @@ export function isCustomPostId(id: number): boolean {
     return getCustomPosts().some(p => p.id === id);
 }
 
-// This function looks for if the user has reached their limit for posts and returns true or false
 export function hasReachedPostLimit(): boolean {
     return getCustomPosts().length >= MAX_CUSTOM_POSTS;
 }
@@ -73,7 +82,7 @@ export function deleteCustomPost(id: number) {
     localStorage.setItem(CUSTOM_POSTS_KEY, JSON.stringify(posts));
 }
 
-// ---- Comments on those locally-created posts ----
+// ---- Custom comments ----
 function loadCustomComments(): Record<number, Comment[]> {
     try {
         const raw = localStorage.getItem(CUSTOM_COMMENTS_KEY);

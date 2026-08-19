@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
-import { useParams, Link } from "react-router-dom";
-import { fetchPost, fetchComments, addComment } from "./api";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { fetchPost, fetchComments, addComment, deletePost } from "./api";
 import { Post, Comment } from "./Types";
 import {
     useLikedPosts,
@@ -9,10 +9,12 @@ import {
     getCustomPost,
     getCustomComments,
     addCustomComment,
+    deleteCustomPost,
 } from "./storage";
 
 export function PostPage() {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const [post, setPost] = useState<Post | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState("");
@@ -25,7 +27,6 @@ export function PostPage() {
         if (!id || numericId === null) return;
 
         if (isCustom) {
-            // Locally-created post — dummyjson doesn't know about this ID, so read from localStorage
             setPost(getCustomPost(numericId) ?? null);
             setComments(getCustomComments(numericId));
         } else {
@@ -61,13 +62,28 @@ export function PostPage() {
         setPost({ ...post, reactions: { ...post.reactions, likes: post.reactions.likes + delta } });
     }
 
+    async function handleDelete() {
+        if (numericId === null) return;
+        if (isCustom) {
+            deleteCustomPost(numericId);
+        } else {
+            await deletePost(numericId);
+        }
+        navigate("/");
+    }
+
     if (!post) return <p className="p-4">Loading...</p>;
 
     const liked = numericId !== null && likedIds.has(numericId);
 
     return (
         <div className="max-w-2xl mx-auto p-4">
-            <Link to="/" className="btn btn-ghost mb-4">← Back to feed</Link>
+            <div className="flex items-center gap-2 mb-4">
+                <Link to="/" className="btn btn-ghost">← Back to feed</Link>
+                <button onClick={handleDelete} className="btn btn-error btn-sm">
+                    Slet post
+                </button>
+            </div>
 
             <div className="card bg-base-200 shadow-sm mb-6">
                 <div className="card-body">
