@@ -39,7 +39,7 @@ export function CreatePost({ onCreate }: { onCreate: (post: Post) => void }) {
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-4">
             <input
-                className="input input-bordered w-full"
+                className="input input-bordered w-full border-2 border-base-300 focus:border-blue-500"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 placeholder="Title"
@@ -50,7 +50,7 @@ export function CreatePost({ onCreate }: { onCreate: (post: Post) => void }) {
             </span>
 
             <textarea
-                className="textarea textarea-bordered w-full"
+                className="textarea textarea-bordered w-full border-2 border-base-300 focus:border-blue-500"
                 value={body}
                 onChange={e => setBody(e.target.value)}
                 placeholder="What's on your mind?"
