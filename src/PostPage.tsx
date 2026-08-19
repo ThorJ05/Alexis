@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { fetchPost, fetchComments, addComment } from "./api";
+import { fetchPost, fetchComments, addComment, deleteComment } from "./api";
 import { Post, Comment } from "./Types";
 import {
     useLikedPosts,
@@ -9,6 +9,12 @@ import {
     getCustomPost,
     getCustomComments,
     addCustomComment,
+    deleteCustomComment,
+    getExtraComments,
+    addExtraComment,
+    deleteExtraComment,
+    markCommentDeleted,
+    filterDeletedComments,
 } from "./storage";
 
 export function PostPage({ onDelete }: { onDelete: (id: number) => void }) {
@@ -30,7 +36,14 @@ export function PostPage({ onDelete }: { onDelete: (id: number) => void }) {
             setComments(getCustomComments(numericId));
         } else {
             fetchPost(id).then(setPost);
-            fetchComments(id).then(setComments);
+            fetchComments(id).then(fetched => {
+                // Merge dummyjson's seeded comments (minus any you've deleted)
+                // with comments you've added locally, since dummyjson doesn't
+                // actually persist new comments server-side.
+                const seeded = filterDeletedComments(fetched);
+                const extra = getExtraComments(numericId);
+                setComments([...extra, ...seeded]);
+            });
         }
     }, [id]);
 
@@ -48,10 +61,32 @@ export function PostPage({ onDelete }: { onDelete: (id: number) => void }) {
             addCustomComment(numericId, comment);
             setComments(prev => [comment, ...prev]);
         } else {
-            const comment = await addComment(numericId, newComment);
+            const serverComment = await addComment(numericId, newComment);
+            // Ignore dummyjson's returned id (it's often reused/fake) — use our own
+            // unique local id so it never collides with a deleted-comment id later.
+            const comment: Comment = { ...serverComment, id: Date.now() };
+            addExtraComment(numericId, comment);
             setComments(prev => [comment, ...prev]);
         }
         setNewComment("");
+    }
+
+    async function handleDeleteComment(commentId: number) {
+        if (numericId === null) return;
+
+        if (isCustom) {
+            deleteCustomComment(numericId, commentId);
+        } else {
+            // Locally-added comment vs. one of dummyjson's seeded ones
+            const isExtra = getExtraComments(numericId).some(c => c.id === commentId);
+            if (isExtra) {
+                deleteExtraComment(numericId, commentId);
+            } else {
+                await deleteComment(commentId);
+                markCommentDeleted(commentId);
+            }
+        }
+        setComments(prev => prev.filter(c => c.id !== commentId));
     }
 
     function handleLike() {
@@ -115,9 +150,18 @@ export function PostPage({ onDelete }: { onDelete: (id: number) => void }) {
             <div className="flex flex-col gap-2">
                 {comments.map(comment => (
                     <div key={comment.id} className="card bg-base-200 shadow-sm">
-                        <div className="card-body py-3">
-                            <p>{comment.body}</p>
-                            <span className="text-xs opacity-60">— {comment.user.username}</span>
+                        <div className="card-body py-3 flex-row items-center justify-between">
+                            <div>
+                                <p>{comment.body}</p>
+                                <span className="text-xs opacity-60">— {comment.user.username}</span>
+                            </div>
+                            <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="text-error hover:scale-110 transition-transform cursor-pointer shrink-0 ml-2"
+                                title="Slet kommentar"
+                            >
+                                🗑
+                            </button>
                         </div>
                     </div>
                 ))}

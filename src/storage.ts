@@ -4,6 +4,7 @@ import { Post, Comment } from "./Types";
 const LIKED_KEY = "likedPostIds";
 const CUSTOM_POSTS_KEY = "customPosts";
 const CUSTOM_COMMENTS_KEY = "customComments";
+const DELETED_COMMENTS_KEY = "deletedCommentIds";
 const MAX_CUSTOM_POSTS = 12;
 
 const MAX_TITLE_LENGTH = 100;
@@ -82,7 +83,7 @@ export function deleteCustomPost(id: number) {
     localStorage.setItem(CUSTOM_POSTS_KEY, JSON.stringify(posts));
 }
 
-// ---- Custom comments ----
+// ---- Custom comments (comments on locally-created posts) ----
 function loadCustomComments(): Record<number, Comment[]> {
     try {
         const raw = localStorage.getItem(CUSTOM_COMMENTS_KEY);
@@ -101,4 +102,60 @@ export function addCustomComment(postId: number, comment: Comment) {
     const all = loadCustomComments();
     all[postId] = [comment, ...(all[postId] ?? [])];
     localStorage.setItem(CUSTOM_COMMENTS_KEY, JSON.stringify(all));
+}
+
+export function deleteCustomComment(postId: number, commentId: number) {
+    const all = loadCustomComments();
+    all[postId] = (all[postId] ?? []).filter(c => c.id !== commentId);
+    localStorage.setItem(CUSTOM_COMMENTS_KEY, JSON.stringify(all));
+}
+
+// ---- Locally-added comments on real dummyjson posts (their API doesn't actually persist adds) ----
+const EXTRA_COMMENTS_KEY = "extraComments";
+
+function loadExtraComments(): Record<number, Comment[]> {
+    try {
+        const raw = localStorage.getItem(EXTRA_COMMENTS_KEY);
+        return raw ? JSON.parse(raw) : {};
+    } catch {
+        return {};
+    }
+}
+
+export function getExtraComments(postId: number): Comment[] {
+    const all = loadExtraComments();
+    return all[postId] ?? [];
+}
+
+export function addExtraComment(postId: number, comment: Comment) {
+    const all = loadExtraComments();
+    all[postId] = [comment, ...(all[postId] ?? [])];
+    localStorage.setItem(EXTRA_COMMENTS_KEY, JSON.stringify(all));
+}
+
+export function deleteExtraComment(postId: number, commentId: number) {
+    const all = loadExtraComments();
+    all[postId] = (all[postId] ?? []).filter(c => c.id !== commentId);
+    localStorage.setItem(EXTRA_COMMENTS_KEY, JSON.stringify(all));
+}
+
+// ---- Deleted comment tracking (for dummyjson's own seeded comments, since their API doesn't persist deletes) ----
+function loadDeletedCommentIds(): Set<number> {
+    try {
+        const raw = localStorage.getItem(DELETED_COMMENTS_KEY);
+        return raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch {
+        return new Set();
+    }
+}
+
+export function markCommentDeleted(commentId: number) {
+    const ids = loadDeletedCommentIds();
+    ids.add(commentId);
+    localStorage.setItem(DELETED_COMMENTS_KEY, JSON.stringify([...ids]));
+}
+
+export function filterDeletedComments(comments: Comment[]): Comment[] {
+    const deleted = loadDeletedCommentIds();
+    return comments.filter(c => !deleted.has(c.id));
 }

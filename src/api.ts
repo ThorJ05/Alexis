@@ -40,3 +40,7 @@ export async function addComment(postId: number, body: string): Promise<Comment>
     });
     return res.json();
 }
+
+export async function deleteComment(id: number): Promise<void> {
+    await fetch(`${BASE}/comments/${id}`, { method: "DELETE" });
+}
